@@ -7,6 +7,7 @@ import json
 
 app = FastAPI()
 
+# Allow your frontend to connect
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,6 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Get OpenAI key from Vercel environment variables
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 QUESTIONS = [
@@ -21,7 +23,7 @@ QUESTIONS = [
     "What are your greatest strengths?",
     "What is your biggest weakness?",
     "Why do you want to work here?",
-    "Tell me about a challenge you overcame.",
+    "Describe a challenge you overcame.",
     "Where do you see yourself in 5 years?",
     "Why should we hire you?",
 ]
@@ -49,11 +51,11 @@ async def analyze_audio(audio: UploadFile = File(...), question: str = Form(...)
             messages=[
                 {
                     "role": "system",
-                    "content": "You are an interview coach. Analyze the answer and return JSON with: score (0-100), feedback (constructive critique), strengths (what they did well), improvements (what to fix)"
+                    "content": "You are an interview coach. Return JSON with: score (0-100), feedback (detailed), strengths (list), improvements (list)"
                 },
                 {
                     "role": "user",
-                    "content": f"Question: {question}\nAnswer: {transcript}\n\nScore on: Relevance (30pts), Structure (25pts), Specificity (25pts), Confidence (20pts)"
+                    "content": f"Question: {question}\nAnswer: {transcript}"
                 }
             ],
             response_format={"type": "json_object"}
@@ -79,7 +81,7 @@ async def next_question():
     else:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[{"role": "system", "content": "Generate a challenging behavioral interview question. Return just the question."}]
+            messages=[{"role": "system", "content": "Generate one challenging behavioral interview question. Return just the question."}]
         )
         question = response.choices[0].message.content
     
