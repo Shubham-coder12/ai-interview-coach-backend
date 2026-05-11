@@ -7,7 +7,15 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/health",
+      "dest": "main.py"
+    },
+    {
+      "src": "/analyze",
+      "dest": "main.py"
+    },
+    {
+      "src": "/next-question",
       "dest": "main.py"
     }
   ]
