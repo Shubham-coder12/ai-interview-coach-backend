@@ -1,22 +1,14 @@
 {
   "builds": [
     {
-      "src": "main.py",
+      "src": "Index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/health",
-      "dest": "main.py"
-    },
-    {
-      "src": "/analyze",
-      "dest": "main.py"
-    },
-    {
-      "src": "/next-question",
-      "dest": "main.py"
+      "src": "/(.*)",
+      "dest": "Index.py"
     }
   ]
 }
